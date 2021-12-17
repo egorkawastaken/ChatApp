@@ -10,7 +10,7 @@ import javax.inject.Inject
 class ChatApp: Application() {
 
     @Inject
-    private lateinit var client: ChatClient
+    lateinit var client: ChatClient
     /**
      * StreamSDK initialization
      * @param client is used in all project. Makes all network requests for StreamSDK servers
@@ -18,9 +18,6 @@ class ChatApp: Application() {
 
     override fun onCreate() {
         super.onCreate()
-
-
-
         ChatDomain.Builder(client,applicationContext).build()
     }
 }
