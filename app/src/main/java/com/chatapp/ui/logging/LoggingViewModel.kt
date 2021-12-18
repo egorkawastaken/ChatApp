@@ -13,6 +13,7 @@ import com.chatapp.util.ChatApp
 import com.chatapp.util.Constants
 import dagger.hilt.android.lifecycle.HiltViewModel
 import io.getstream.chat.android.client.call.await
+import io.getstream.chat.android.client.models.User
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.asSharedFlow
@@ -30,11 +31,14 @@ class LoggingViewModel @Inject constructor(
     val loggingEvent = _loggingEvent.asSharedFlow()
 
     fun connectUser(userName: String) {
+        val user = User(
+            id = userName
+        )
 
         viewModelScope.launch(Dispatchers.IO) {
             if (hasInternetConnection()) {
                 if (isUsernameValid(userName)) {
-                    val result = repo.connectUser(userName).await()
+                    val result = repo.connectUser(user).await()
                     if (result.isError) {
                         _loggingEvent.emit(
                             LoggingResult.Error(
@@ -74,6 +78,6 @@ class LoggingViewModel @Inject constructor(
     }
 
     private fun isUsernameValid(userName: String): Boolean =
-        (userName.length >= Constants.MINIMUM_USERNAME_LENGTH)
+        (userName.length >= Constants.MINIMUM_USERNAME_LENGTH && userName.isNotEmpty())
 
 }

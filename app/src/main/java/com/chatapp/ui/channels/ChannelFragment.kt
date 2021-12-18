@@ -18,6 +18,7 @@ import com.chatapp.util.extensions.navigateSafely
 import com.example.chatapp.R
 import com.example.chatapp.databinding.FragmentChannelBinding
 import dagger.hilt.android.AndroidEntryPoint
+import io.getstream.chat.android.client.ChatClient
 import io.getstream.chat.android.client.models.Filters
 import io.getstream.chat.android.ui.channel.list.header.viewmodel.ChannelListHeaderViewModel
 import io.getstream.chat.android.ui.channel.list.header.viewmodel.bindView
@@ -48,21 +49,7 @@ class ChannelFragment : BindingFragment<FragmentChannelBinding>() {
             return
         }
 
-        /** filters for channels */
-        val factory = ChannelListViewModelFactory(
-            filter = Filters.and(
-                Filters.eq("type", "messaging"),
-//                Filters.`in`("members", listOf(channelViewModel.getCurrentUser().))
-            ),
-            sort = ChannelListViewModel.DEFAULT_SORT,
-            limit = 30
-        )
-
-        val channelViewModel: ChannelListViewModel by viewModels { factory }
-        val channelHeaderViewModel: ChannelListHeaderViewModel by viewModels()
-
-        channelViewModel.bindView(binding.channelListView, viewLifecycleOwner)
-        channelHeaderViewModel.bindView(binding.channelListHeaderView, viewLifecycleOwner)
+       setupChannels()
 
         binding.channelListHeaderView.setOnUserAvatarClickListener {
             viewModel.logout()
@@ -71,7 +58,7 @@ class ChannelFragment : BindingFragment<FragmentChannelBinding>() {
 
 
         binding.channelListHeaderView.setOnActionButtonClickListener{
-            findNavController().navigateSafely(R.id.action_channelFragment_to_createChannelDialog)
+            findNavController().navigateSafely(R.id.action_channelFragment_to_usersFragment)
         }
 
         binding.channelListView.setChannelItemClickListener{
@@ -95,6 +82,24 @@ class ChannelFragment : BindingFragment<FragmentChannelBinding>() {
                 }
             }
         }
+    }
+
+    private fun setupChannels() {
+        /** filters for channels */
+        val factory = ChannelListViewModelFactory(
+            filter = Filters.and(
+                Filters.eq("type", "messaging"),
+                Filters.`in`("members", listOf(viewModel.getCurrentUser()!!.id))
+            ),
+            sort = ChannelListViewModel.DEFAULT_SORT,
+            limit = 30
+        )
+
+        val channelViewModel: ChannelListViewModel by viewModels { factory }
+        val channelHeaderViewModel: ChannelListHeaderViewModel by viewModels()
+
+        channelViewModel.bindView(binding.channelListView, viewLifecycleOwner)
+        channelHeaderViewModel.bindView(binding.channelListHeaderView, viewLifecycleOwner)
     }
 
     private fun showToast(message: String) {

@@ -8,6 +8,7 @@ import dagger.hilt.InstallIn
 import dagger.hilt.android.qualifiers.ApplicationContext
 import dagger.hilt.components.SingletonComponent
 import io.getstream.chat.android.client.ChatClient
+import io.getstream.chat.android.client.logger.ChatLogLevel
 import javax.inject.Singleton
 
 
@@ -18,6 +19,6 @@ class Module {
     @Provides
     @Singleton
     fun provideStreamChatClient(@ApplicationContext context: Context)
-        = ChatClient.Builder(context.getString(R.string.api_key),context).build()
+        = ChatClient.Builder(context.getString(R.string.api_key),context).logLevel(ChatLogLevel.ALL).build()
 
 }

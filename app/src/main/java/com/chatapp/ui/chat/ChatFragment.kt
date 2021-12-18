@@ -5,6 +5,7 @@ import android.view.LayoutInflater
 import android.view.View
 import androidx.activity.addCallback
 import androidx.fragment.app.viewModels
+import androidx.navigation.fragment.NavHostFragment
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import androidx.viewbinding.ViewBinding
@@ -64,9 +65,14 @@ class ChatFragment: BindingFragment<FragmentChatBinding>() {
         val backHandler = {
             messageListViewModel.onEvent(MessageListViewModel.Event.BackButtonPressed)
         }
+
         binding.messageListHeaderView.setBackButtonClickListener(backHandler)
         requireActivity().onBackPressedDispatcher.addCallback(viewLifecycleOwner) {
             backHandler()
+            if(parentFragmentManager.backStackEntryCount > 2) {
+                findNavController().popBackStack()
+            }
+
         }
     }
     companion object {

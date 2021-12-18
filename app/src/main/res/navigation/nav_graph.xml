@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <navigation xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/nav_graph"
     android:label="Logging"
     app:startDestination="@id/loginFragment">
@@ -21,8 +22,8 @@
             android:id="@+id/action_channelFragment_to_chatFragment"
             app:destination="@id/chatFragment" />
         <action
-            android:id="@+id/action_channelFragment_to_createChannelDialog"
-            app:destination="@id/createChannelDialog" />
+            android:id="@+id/action_channelFragment_to_usersFragment"
+            app:destination="@id/usersFragment" />
     </fragment>
     <fragment
         android:id="@+id/chatFragment"
@@ -32,8 +33,12 @@
             android:name="channelId"
             app:argType="string" />
     </fragment>
-    <dialog
-        android:id="@+id/createChannelDialog"
-        android:name="com.chatapp.ui.channels.CreateChannelDialog"
-        android:label="CreateChannelDialog" />
+    <fragment
+        android:id="@+id/usersFragment"
+        android:name="com.chatapp.ui.users.UsersFragment"
+        android:label="UsersFragment" >
+        <action
+            android:id="@+id/action_usersFragment_to_chatFragment"
+            app:destination="@id/chatFragment" />
+    </fragment>
 </navigation>

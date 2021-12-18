@@ -24,8 +24,12 @@ class ChannelViewModel @Inject constructor(
         repo.logout()
     }
 
-    fun getCurrentUser() {
+    fun getCurrentUser() =
         repo.getUser()
+
+
+    fun getCurrentUserId() {
+        repo.getUserId()
     }
 
     fun createChannel(channelName: String) {

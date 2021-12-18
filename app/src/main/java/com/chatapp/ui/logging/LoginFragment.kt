@@ -33,6 +33,7 @@ class LoginFragment : BindingFragment<FragmentLoginBinding>() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+
         binding.btnConfirm.setOnClickListener {
             setupUiConnectingState()
             loginViewModel.connectUser(binding.etUsername.text.toString())
