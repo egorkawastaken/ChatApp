@@ -13,7 +13,7 @@ class ChatApp: Application() {
     lateinit var client: ChatClient
     /**
      * StreamSDK initialization
-     * @param client is used in all project. Makes all network requests for StreamSDK servers
+     * @param [client] is used in all project. Makes all network requests for StreamSDK servers
      * */
 
     override fun onCreate() {

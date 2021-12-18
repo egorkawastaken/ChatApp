@@ -11,10 +11,12 @@ import androidx.fragment.app.viewModels
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
+import androidx.navigation.fragment.findNavController
 import androidx.viewbinding.ViewBinding
 import com.chatapp.common.BindingFragment
 import com.chatapp.data.remote.LoggingResult
 import com.chatapp.util.Constants
+import com.chatapp.util.extensions.navigateSafely
 import com.example.chatapp.R
 import com.example.chatapp.databinding.FragmentLoginBinding
 import dagger.hilt.android.AndroidEntryPoint
@@ -34,6 +36,7 @@ class LoginFragment : BindingFragment<FragmentLoginBinding>() {
         binding.btnConfirm.setOnClickListener {
             setupUiConnectingState()
             loginViewModel.connectUser(binding.etUsername.text.toString())
+            findNavController().navigateSafely(R.id.action_loginFragment_to_channelFragment)
         }
 
         binding.etUsername.apply {
@@ -45,6 +48,7 @@ class LoginFragment : BindingFragment<FragmentLoginBinding>() {
                 if (actionId == EditorInfo.IME_ACTION_SEARCH) {
                     setupUiConnectingState()
                     loginViewModel.connectUser(binding.etUsername.text.toString())
+                    findNavController().navigateSafely(R.id.action_loginFragment_to_channelFragment)
                     true
                 } else {
                     false
