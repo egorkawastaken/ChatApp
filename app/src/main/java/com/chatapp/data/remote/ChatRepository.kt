@@ -48,7 +48,7 @@ class ChatRepository @Inject constructor(
             channelType = "messaging",
             members = listOf(chatClient.getCurrentUser()!!.id, id),
             mapOf(
-                "name" to id
+                "name" to "$id and ${chatClient.getCurrentUser()!!.id}"
             )
         )
     }
