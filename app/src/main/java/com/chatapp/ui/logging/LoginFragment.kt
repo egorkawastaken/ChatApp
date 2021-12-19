@@ -4,6 +4,7 @@ import android.os.Bundle
 import android.os.Message
 import android.view.LayoutInflater
 import android.view.View
+import android.view.ViewGroup
 import android.view.inputmethod.EditorInfo
 import android.widget.Toast
 import androidx.core.widget.addTextChangedListener
@@ -31,12 +32,27 @@ class LoginFragment : BindingFragment<FragmentLoginBinding>() {
 
     private val loginViewModel: LoggingViewModel by viewModels()
 
+    override fun onCreateView(
+        inflater: LayoutInflater,
+        container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View? {
+        isRemembered()
+
+        return super.onCreateView(inflater, container, savedInstanceState)
+    }
+
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
+
         binding.btnConfirm.setOnClickListener {
             setupUiConnectingState()
-            loginViewModel.connectUser(binding.etUsername.text.toString())
+            val userName = binding.etUsername.text.toString()
+            if(binding.checkBoxRemember.isChecked) {
+                loginViewModel.rememberUser(userName)
+            }
+            loginViewModel.connectUser(userName)
             findNavController().navigateSafely(R.id.action_loginFragment_to_channelFragment)
         }
 
@@ -48,7 +64,11 @@ class LoginFragment : BindingFragment<FragmentLoginBinding>() {
             setOnEditorActionListener { v, actionId, event ->
                 if (actionId == EditorInfo.IME_ACTION_SEARCH) {
                     setupUiConnectingState()
-                    loginViewModel.connectUser(binding.etUsername.text.toString())
+                    val userName = binding.etUsername.text.toString()
+                    loginViewModel.connectUser(userName)
+                    if(binding.checkBoxRemember.isChecked) {
+                        loginViewModel.rememberUser(userName)
+                    }
                     findNavController().navigateSafely(R.id.action_loginFragment_to_channelFragment)
                     true
                 } else {
@@ -74,6 +94,7 @@ class LoginFragment : BindingFragment<FragmentLoginBinding>() {
         binding.btnConfirm.visibility = View.VISIBLE
         binding.etUsername.visibility = View.VISIBLE
         binding.tvLogin.visibility = View.VISIBLE
+        binding.checkBoxRemember.isChecked = false
     }
 
     private fun subscribeToEvents() {
@@ -92,6 +113,23 @@ class LoginFragment : BindingFragment<FragmentLoginBinding>() {
                         is LoggingResult.Success -> {
                             setupUiIdleState()
                             showToast("Welcome, ${it.name}.")
+                        }
+                    }
+                }
+
+            }
+        }
+    }
+
+    private fun isRemembered() {
+        lifecycleScope.launch {
+            repeatOnLifecycle(Lifecycle.State.STARTED) {
+                loginViewModel.isRemembered()
+                loginViewModel.isRemembered.collect{
+                    if(it) {
+                       loginViewModel.userName.collect{ userName ->
+                            loginViewModel.connectUser(userName)
+                            findNavController().navigateSafely(R.id.action_loginFragment_to_channelFragment)
                         }
                     }
                 }

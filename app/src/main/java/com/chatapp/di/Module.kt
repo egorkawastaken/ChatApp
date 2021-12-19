@@ -1,6 +1,8 @@
 package com.chatapp.di
 
 import android.content.Context
+import com.chatapp.preferences.PreferenceStorage
+import com.chatapp.preferences.SharedPreferencesStorage
 import com.example.chatapp.R
 import dagger.Module
 import dagger.Provides
@@ -20,5 +22,9 @@ class Module {
     @Singleton
     fun provideStreamChatClient(@ApplicationContext context: Context)
         = ChatClient.Builder(context.getString(R.string.api_key),context).logLevel(ChatLogLevel.ALL).build()
+
+    @Provides
+    @Singleton
+    fun providePreferenceStorage(@ApplicationContext context: Context): PreferenceStorage = SharedPreferencesStorage(context)
 
 }

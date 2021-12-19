@@ -9,6 +9,7 @@ import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.viewModelScope
 import com.chatapp.data.remote.ChatRepository
 import com.chatapp.data.remote.LoggingResult
+import com.chatapp.preferences.PreferenceStorage
 import com.chatapp.util.ChatApp
 import com.chatapp.util.Constants
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -24,8 +25,15 @@ import javax.inject.Inject
 @HiltViewModel
 class LoggingViewModel @Inject constructor(
     private val repo: ChatRepository,
+    private val preferences: PreferenceStorage,
     app: Application
 ) : AndroidViewModel(app) {
+
+    private val _isRemembered = MutableSharedFlow<Boolean>()
+    val isRemembered = _isRemembered.asSharedFlow()
+
+    private val _userName = MutableSharedFlow<String>()
+    val userName = _userName.asSharedFlow()
 
     private val _loggingEvent = MutableSharedFlow<LoggingResult>()
     val loggingEvent = _loggingEvent.asSharedFlow()
@@ -61,6 +69,20 @@ class LoggingViewModel @Inject constructor(
         }
     }
 
+    fun rememberUser(userName: String) {
+       preferences.isRemembered = true
+       preferences.userName = userName
+    }
+
+    fun isRemembered() {
+        if (preferences.isRemembered) {
+            viewModelScope.launch {
+                _isRemembered.emit(true)
+                val user = preferences.userName
+                _userName.emit(user)
+            }
+        }
+    }
 
     private fun hasInternetConnection(): Boolean {
         val connectivityManager = getApplication<ChatApp>().getSystemService(
