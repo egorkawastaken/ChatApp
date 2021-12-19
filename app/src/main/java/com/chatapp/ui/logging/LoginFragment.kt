@@ -86,7 +86,7 @@ class LoginFragment : BindingFragment<FragmentLoginBinding>() {
         binding.btnConfirm.visibility = View.GONE
         binding.etUsername.visibility = View.GONE
         binding.tvLogin.visibility = View.GONE
-
+        binding.checkBoxRemember.visibility = View.GONE
     }
 
     private fun setupUiIdleState() {
@@ -94,6 +94,7 @@ class LoginFragment : BindingFragment<FragmentLoginBinding>() {
         binding.btnConfirm.visibility = View.VISIBLE
         binding.etUsername.visibility = View.VISIBLE
         binding.tvLogin.visibility = View.VISIBLE
+        binding.checkBoxRemember.visibility = View.VISIBLE
         binding.checkBoxRemember.isChecked = false
     }
 
