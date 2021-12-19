@@ -53,6 +53,8 @@ class ChannelFragment : BindingFragment<FragmentChannelBinding>() {
 
         binding.channelListHeaderView.setOnUserAvatarClickListener {
             viewModel.logout()
+            viewModel.forgetUser()
+            showToast("You've successfully logged out.")
             findNavController().popBackStack()
         }
 
